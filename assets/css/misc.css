@@ -1,0 +1,148 @@
+* {
+	font-family: "Droid Sans", "Arial", "Helvetica", sans-serif;
+	margin: 0;
+}
+
+.page {
+	width: 1120px; min-height: 100%;
+	height: auto;
+}
+
+/* EXPORT BUTTON */
+.export-button {
+	background: #00D900;
+	color: #fff;
+	float: right;
+	padding: 3px 8px 3px 8px;
+	text-decoration: none;
+	border-radius: 2px;
+}
+.export-button:hover {
+	background: #00FF00;
+}
+
+/* START - Careers Module Application form */
+#careerApplicantForm{ width: 100%; border: 1px solid #000;}
+#careerApplicantForm thead tr th {
+	background: #BBBBBB;
+	font-size: 34px;
+	text-align: center;
+	color: #222222;
+	border: 1px solid #000;
+}
+#careerApplicantForm tbody tr .label { background:#DDDDDD; color: #222222;	border: 1px solid #000;}
+#careerApplicantForm tbody tr .input { background:#fff; color: #222222; border: 1px solid #000; }
+#careerApplicantForm tbody tr td { font-size: 18px; border: 1px solid #000; }
+#careerApplicantForm tbody tr td .applicant_input { border: 1px solid #fff; }
+#careerApplicantForm tbody tr td .submitbtn { border: 1px solid #0086B3; background: #0086B3; color: #fff; padding-top: 8px; padding-bottom: 8px; margin-top: 6px; margin-bottom: 6px; }
+#careerApplicantForm tbody tr td .submitbtn:hover { border: 1px solid #00A3D9; background: #00A3D9; color: #fff; padding-top: 8px; padding-bottom: 8px; margin-top: 6px; margin-bottom: 6px; }
+/* END - Careers Module Application form */
+.footer, .push {
+	height: 1px; /* .push must be the same height as .footer */
+}
+
+ul.dropdown                         { font-size: 17px; position: relative; list-style-type: none; }
+ul.dropdown li                      { font-size: 17px; float: left; zoom: 1; background: #A52A2A; list-style-type:none; }
+ul.dropdown a:hover		            { color: #000; }
+ul.dropdown a:active                { color: #ffa500; }
+ul.dropdown li a                    { display: block; padding: 4px 8px; border-right: 1px solid #333;text-decoration:none; color: #ffffff; }
+ul.dropdown li:last-child a         { border-right: none; } /* Doesn't work in IE */
+ul.dropdown li.hover,
+ul.dropdown li:hover                { background: #F3D673; color: black; position: relative; }
+ul.dropdown li.hover a              { color: #a52a2a; }
+
+/* 
+	LEVEL TWO
+*/
+ul.dropdown ul 						{ width: 220px; visibility: hidden; position: absolute; top: 100%; left: 0; }
+ul.dropdown ul li 					{ font-weight: normal; background: #f6f6f6; color: #000; 
+									  border-bottom: 1px solid #ccc; float: none; }
+									  
+                                    /* IE 6 & 7 Needs Inline Block */
+ul.dropdown ul li a					{ border-right: none; width: 100%; display: inline-block; } 
+
+/* 
+	LEVEL THREE
+*/
+ul.dropdown ul ul 					{ left: 100%; top: 0; }
+ul.dropdown li:hover > ul 			{ visibility: visible; }
+
+/*
+	PRODUCT CATEGORIES
+*/
+ul.productCategories{text-decoration: none;} ul.productCategories li{ list-style: none; } ul.productCategories a{color: #ffffff; text-decoration: none;} ul.productCategories a:hover{color: #ffffff; text-decoration: underline;}
+
+/* PAJINATE Custom Style */
+.pajinateDiv .page_navigation a { background-color: #cc9966; color: #ffffff; margin: 3px; padding: 4px; font-size: 14px; }
+.pajinateDiv .page_navigation a:hover { background-color: #ffffff; color: #000000; margin: 3px; padding: 4px; }
+.pajinateDiv .page_navigation a:focus { background-color: #ffffff; color: #000000; margin: 3px; padding: 4px; }
+.pajinateDiv .content { margin-top: 5px; }
+.pajinateDiv .content li { list-style: none; background: #493D26; margin-bottom: 4px; padding: 10px; }
+.pajinateDiv .content li p { font-size: 14px; }
+
+/* Misc Forms */
+.login-form{min-height: 400px; width: 300px;}
+.login-form .login-textfield { border: 2px solid #ffffff; width: 288px; }
+.login-form .login-button:hover{background: #7F5217; border: 1px solid #7F5217; color: white; padding: 5px 42px 5px 42px;}
+.login-form .login-button{ background: #835C3B; border: 1px solid #835C3B; color: white; padding: 5px 42px 5px 42px; }
+
+/* Inquiry Form */
+#inquiryForm .textfield{ border: 1px #ffffff; width: 175px; }
+#inquiryForm .buttonForm { background: blue; border: 1px blue; padding: 6px 12px 6px 12px; color: #ffffff; }
+#inquiryForm .buttonForm:hover { background: #168EF7; border: 1px #168EF7; padding: 6px 12px 6px 12px; color: #ffffff; }
+#inquiryForm .buttonAddProduct { background: #F88017; border: 1px #f88017; padding: 6px 12px 6px 12px; color: #ffffff; }
+#inquiryForm .buttonAddProduct:hover { background: #FFA83F; border: 1px #FFA83F; padding: 6px 12px 6px 12px; color: #ffffff; }
+#inquiryForm table {  }
+#inquiryForm th { padding: 5px; border: 1px solid #000000; }
+#inquiryForm td { padding: 5px; border: 1px solid #000000; }
+.inquiry-account-help { background:orange; }
+
+/* Form - Adding Sales Assistant */
+#adminAddSalesAssistant table { width: 100%; }
+#adminAddSalesAssistant table thead tr th { background: #003366; color: #fff; font-size: 22px; text-align: center; }
+#adminAddSalesAssistant table tbody tr .label { background: #006CD9; color: #fff; }
+#adminAddSalesAssistant table tbody tr td .addSalesAssistBtn { float:right; padding: 5px; border: 1px solid #FF4000; background: #FF4000; color: white; }
+#adminAddSalesAssistant table tbody tr td .addSalesAssistBtn:hover { float:right; padding: 5px; border: 1px solid #D93600; background: #D93600; color: white; }
+
+/* Inquiry Documents Page on Sales Assistant panel */
+.InquiryDocumentsSales { width: 100%; }
+.InquiryDocumentsSales thead tr th { background: #007fff; color: #fff; font-size: 26px; text-align: center; }
+.InquiryDocumentsSales thead tr th .approve { background: #00BFFF; color: #fff; border: 1px solid #00BFFF; width: 75px; padding: 2px 0px 2px 0px; margin-top: 3px; margin-bottom: 3px; }
+.InquiryDocumentsSales tbody tr td { background: #cccccc; color: #000; font-size: 16px; text-align: center; }
+.InquiryDocumentsSales tbody tr td .approve { background: #00BFFF; color: #fff; border: 1px solid #00BFFF; width: 75px; padding: 2px 0px 2px 0px; margin-top: 3px; margin-bottom: 3px; }
+.InquiryDocumentsSales tbody tr td .deny { background: red; color:#fff; border: 1px solid red; width: 75px; padding: 2px 0px 2px 0px; margin-top: 3px; margin-bottom: 3px; }
+.InquiryDocumentsSales tbody tr td .view { background: #999999; color: #fff; border: 1px solid #999999; width: 75px; padding: 2px 0px 2px 0px; matgin-top: 3px; margin-bottom: 3px; }
+.InquiryDocumentsSales tbody tr td .approve:hover { background: #0086B3; color: #fff; border: 1px solid #0086B3; width: 75px; padding: 2px 0px 2px 0px; margin-top: 3px; margin-bottom: 3px; }
+.InquiryDocumentsSales tbody tr td .deny:hover { background: #8c0000; color:#fff; border: 1px solid #8c0000; width: 75px; padding: 2px 0px 2px 0px; margin-top: 3px; margin-bottom: 3px; }
+.InquiryDocumentsSales tbody tr td .view:hover { background: #444444; color: #fff; border: 1px solid #444444; width: 75px; padding: 2px 0px 2px 0px; matgin-top: 3px; margin-bottom: 3px; }
+.InquiryDocumentsSales tbody tr td .approve:focus { background: #0086B3; color: #fff; border: 1px solid #0086B3; width: 75px; padding: 2px 0px 2px 0px; margin-top: 3px; margin-bottom: 3px; }
+.InquiryDocumentsSales tbody tr td .deny:hover { background: #8c0000; color:#fff; border: 1px solid #8c0000; width: 75px; padding: 2px 0px 2px 0px; margin-top: 3px; margin-bottom: 3px; }
+.InquiryDocumentsSales tbody tr td .view:hover { background: #444444; color: #fff; border: 1px solid #444444; width: 75px; padding: 2px 0px 2px 0px; matgin-top: 3px; margin-bottom: 3px; }
+.btnGenInqRep { background: #3399cc;color: #fff;border: 1px solid #3399cc;padding: 3px 12px 3px 12px;text-decoration: none;}
+.btnGenInqRep:hover { background: #00ccff;color: #fff;border: 1px solid #00ccff;padding: 3px 12px 3px 12px;text-decoration: none;}
+
+#filterEmployeeList td { background:#24587a; }
+
+/* SEarch babe */
+#searchbabe input[type="text"] {
+    background: url(search-white.png) no-repeat 10px 6px #fcfcfc;
+    border: 1px solid #d1d1d1;
+    font: bold 12px Arial,Helvetica,Sans-serif;
+    color: #bebebe;
+    width: 150px;
+    padding: 6px 15px 6px 35px;
+    -webkit-border-radius: 18px;
+    -moz-border-radius: 18px;
+    border-radius: 18px;
+    text-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);
+    -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15) inset;
+    -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15) inset;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15) inset;
+    -webkit-transition: all 0.7s ease 0s;
+    -moz-transition: all 0.7s ease 0s;
+    -o-transition: all 0.7s ease 0s;
+    transition: all 0.7s ease 0s;
+    }
+   #searchbabe input[type="text"]:focus {
+    width: 175px;
+    }
