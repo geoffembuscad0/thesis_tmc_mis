@@ -72,6 +72,10 @@
 							</thead>
 							<tbody>
 							<tr>
+								<td class='label'>Employee ID</td>
+								<td class='input'><?php echo $employee['employee_id'];?></td>
+							</tr>
+							<tr>
 								<td class='label'>Firstname:</td>
 								<td class='input'><?php echo $employee['firstname'];?></td>
 							</tr><tr>
