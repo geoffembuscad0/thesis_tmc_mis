@@ -159,7 +159,7 @@ class Model_Pms extends Model {
 		DB::query(DATABASE::INSERT, $sql)->execute();
 	}
 	public function attendance_logout($emp_no){
-		$sql = "UPDATE pms_attendance_monitoring SET timeout = now() WHERE emp_no = '".$emp_no."' AND date_format(time_in,'%Y-%m-%d') = date_format(now(),'%Y-%m-%d')";
+		$sql = "UPDATE pms_attendance_monitoring SET timeout = now() WHERE emp_no = '".$emp_no."' ORDER BY attend_no DESC LIMIT 1";
 		DB::query(DATABASE::UPDATE, $sql)->execute();
 	}
 	public function get_deduction_late($emp_no){

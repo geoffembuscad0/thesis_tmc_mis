@@ -46,7 +46,7 @@
 		<?php } else { ?>
 			<?php foreach($employees AS $employee){ ?>
 			<tr>
-				<td style="text-align: left; padding-left: 15px;"><?php echo $employee['lastname'] . ", " . $employee['firstname']; ?></td>
+				<td style="text-align: left; padding-left: 15px;"><?php echo $employee['lastname'] . ", " . $employee['firstname'] . " " . strtoupper(substr($employee['middlename'],0,1)); ?>.</td>
 				<td><?php echo $employee['pos_name'];?></td>
 				<td><?php echo $employee['dept_name'];?></td>
 				<td><?php echo $employee['type'];?></td>
@@ -64,6 +64,10 @@
 							<tr><th colspan='4'>Edit Employee</th></tr>
 							</thead>
 							<tbody>
+							<tr>
+								<td class='label'>Employee ID:</td>
+								<td class='input'><?php echo $employee['employee_id'];?></td>
+							</tr>
 							<tr>
 								<td class='label'>Firstname:</td>
 								<td class='input'><?php echo Form::input('empFname',$employee['firstname'],array('id'=>'editFnameEmp' . sha1($employee['employee_id']),'class'=>'applicant_input','style'=>'width:98%'));?></td>

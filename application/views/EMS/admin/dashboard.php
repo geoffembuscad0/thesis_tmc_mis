@@ -53,7 +53,7 @@
 			<?php if(count($employees) > 0) { ?>
 				<?php foreach($employees AS $employee){ ?>
 					<tr>
-						<td style="text-align: left; padding-left: 15px;"><?php echo $employee['lastname'];?>, <?php echo $employee['firstname'];?></td>
+				<td style="text-align: left; padding-left: 15px;"><?php echo $employee['lastname'] . ", " . $employee['firstname'] . " " . strtoupper(substr($employee['middlename'],0,1)); ?>.</td>
 						<td><?php echo $employee['pos_name'];?></td>
 						<td><?php echo $employee['dept_name'];?></td>
 						<td><?php echo $employee['type'];?></td>

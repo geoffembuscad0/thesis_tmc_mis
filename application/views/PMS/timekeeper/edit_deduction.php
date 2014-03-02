@@ -63,7 +63,7 @@
 							</tr>
 							<tr>
 							<td>
-							<input type="text" name="deduction" value="<?php echo $sss['deduction_value'];?>"/>
+							<input id="deductionSSS<?php echo $sss['ded_no'];?>" type="text" name="deduction" value="<?php echo $sss['deduction_value'];?>"/>
 							</td>
 							</tr>
 							<tr><td><button id="saveDeductionSSS<?php echo $sss['ded_no'];?>" class="approve">Save Deduction</button></td></tr>
@@ -79,7 +79,7 @@
 						$.ajax({
 							url: '<?php echo URL::site('pms/save_deduction_sss', null, true);?>',
 							type: 'POST',
-							data: { ded_no: '<?php echo $sss['ded_no'];?>', deduction: $("input[name='deduction']").val() },
+							data: { ded_no: '<?php echo $sss['ded_no'];?>', deduction: $("#deductionSSS<?php echo $sss['ded_no'];?>").val() },
 							success:function(ressponseSaveSSS){
 								alert(ressponseSaveSSS);
 								self.location = '<?php echo URL::site('pms/deduction_table', null, true);?>';
@@ -134,7 +134,7 @@
 							</tr>
 							<tr>
 							<td>
-							<input type="text" name="deduction" value="<?php echo $ph['deduction'];?>"/>
+							<input id="deductionPHP<?php echo $ph['ded_no'];?>" type="text" name="deduction" value="<?php echo $ph['deduction'];?>"/>
 							</td>
 							</tr>
 							<tr class="response"></tr>
@@ -151,10 +151,10 @@
 						$.ajax({
 							url: '<?php echo URL::site('pms/save_deduction_ph',null,true);?>',
 							type: 'POST',
-							data: { ded_no: '<?php echo $ph['ded_no']; ?>',deduction:$("input[name='deduction']").val() },
+							data: { ded_no: '<?php echo $ph['ded_no']; ?>',deduction:$("#deductionPHP<?php echo $ph['ded_no'];?>").val() },
 							success: function(responsesavePH){
 								alert(responsesavePH);
-								self.location = '<?php echo URL::site('pms/deduction_table',null,false);?>';
+								self.location = '<?php echo URL::site('pms/deduction_table',null,true);?>';
 							}
 						});
 					});
