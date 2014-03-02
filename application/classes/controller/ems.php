@@ -184,6 +184,7 @@ class Controller_Ems extends Controller {
 		$presentation_tier->job_positions = $this->obj['ems_logic']->get_position();
 		$presentation_tier->departments = $this->obj['ems_logic']->get_departments();
 		$presentation_tier->marital_statuses = array(1=>"Single", 2=>"Married");
+		$presentation_tier->working_statuses = array(1=>"Active", 2=>"Resigned");
 		$presentation_tier->genders = array('male'=>'m','female'=>'f');
 		$presentation_tier->sort_queries = array(
 				"name" => array("","Firstname - ASC","Firstname - DESC","Lastname - ASC","Lastname - DESC"),
@@ -255,7 +256,25 @@ class Controller_Ems extends Controller {
 		}
 		
 		$datas['position'] = $this->request->post('position');
-
+		
+		if($this->request->post('address') != null){
+			$datas['address'] = $this->request->post('address');
+		} else {
+			$msg.="Address entry is not valid. ";
+		}
+		
+		if($this->request->post('sex') != null){
+			$datas['sex'] = $this->request->post('sex');
+		} else {
+			$msg.="Sex entry is not valid.";
+		}
+		if($this->request->post('civil_status') != null){
+			$datas['civil_status'] = $this->request->post('civil_status');
+		} else {
+			$msg.="Civil Status entry is not valid. ";
+		}
+		$datas['working_status'] = $this->request->post('working_status');
+		
 		if($msg == null){
 			echo $this->obj['ems_logic']->update_employee($datas);
 		} else {

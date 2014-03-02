@@ -54,7 +54,7 @@ class Model_Ems extends Model_Database {
 			$sql = "SELECT (SELECT COUNT(*) FROM ems_leaves WHERE employee_id = ems_employee.`employee_id`) AS absents,ems_employee.*,ems_positions.*,ems_departments.*,ems_employee_type.*,pms_position_rate.* 
 					FROM ems_employee 
 					JOIN ems_employee_type ON ems_employee_type.`employee_type` = ems_employee.`employee_type` 
-					INNER JOIN ems_ems_employee_locations on ems_employee_locations.employee_id = ems_employee.employee_id 
+
 					INNER JOIN ems_positions ON ems_positions.`position_no` = ems_employee.`position_no` 
 					INNER JOIN pms_position_rate ON pms_position_rate.`position_no` = ems_employee.`position_no` 
 					INNER JOIN ems_departments ON ems_departments.`dept_no` = ems_positions.`dept_no` ";
@@ -171,6 +171,7 @@ class Model_Ems extends Model_Database {
 			$employees[$counter]['position_no'] = $employee_data['position_no'];
 			$employees[$counter]['employee_type'] = $employee_data['employee_type'];
 			$employees[$counter]['date_added'] = $employee_data['date_added'];
+			$employees[$counter]['address'] = $employee_data['address'];
 			$employees[$counter]['birthdate'] = $employee_data['birthdate'];
 			$employees[$counter]['pos_name'] = $employee_data['pos_name'];
 			$employees[$counter]['dept_no'] = $employee_data['dept_no'];
@@ -283,7 +284,8 @@ class Model_Ems extends Model_Database {
 		'".$data['birthdate']."',now(),'1','".$data['civil_status']."', 
 		'".$data['pob']."', '".$data['religion']."','".$data['citizenship']."',
 		'".$data['emg_name']."', '".$data['emg_contact']."', 
-		'".$data['emg_sec_contact']."','".$data['gender']."')";		
+		'".$data['emg_sec_contact']."','".$data['gender']."','".$data['address']."')";
+		
 		DB::query(DATABASE::INSERT, $sql)->execute();
 	}
 	public function get_position_department(){
@@ -320,7 +322,18 @@ class Model_Ems extends Model_Database {
 	}
 	public function update_employee($datas = array()){
 		$position_pieces = explode(" - ", $datas['position']);
-		$sql = "UPDATE ems_employee SET date_modified = now(), firstname = '".$datas['firstname']."', middlename = '".$datas['middlename']."',lastname = '".$datas['lastname']."', position_no = (SELECT ems_positions.`position_no` FROM ems_positions WHERE ems_positions.`pos_name` LIKE '%".$position_pieces[1]."%') WHERE employee_id = '".$datas['employee_id']."'";
+		$sql = "UPDATE ems_employee 
+				SET date_modified = now(), 
+				firstname = '".$datas['firstname']."', 
+				middlename = '".$datas['middlename']."',
+				lastname = '".$datas['lastname']."',
+				address = '".$datas['address']."',
+				sex= '".$datas['sex']."',
+				status = '".$datas['working_status']."',
+				relation_stat = '".$datas['civil_status']."',
+				position_no = (SELECT ems_positions.`position_no`
+				FROM ems_positions WHERE ems_positions.`pos_name` LIKE '%".$position_pieces[1]."%')
+				WHERE employee_id = '".$datas['employee_id']."'";
 		DB::query(DATABASE::UPDATE, $sql)->execute();
 		return 1;
 	}

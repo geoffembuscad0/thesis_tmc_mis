@@ -75,21 +75,21 @@
 								<td class='input'><?php echo Form::input('empLname',$employee['lastname'], array('id'=>'editLnameEmp' . sha1($employee['employee_id']),'class'=>'applicant_input','style'=>'width:98%')); ?></td>
 							</tr><tr>
 								<td class='label'>Address:</td>
-								<td class='input'><?php echo Form::input('empAddress',$employee['address'], array('id'=>'editCitizenshipEmp' . sha1($employee['employee_id']),'class'=>'applicant_input','style'=>'width:98%')); ?></td>
+								<td class='input'><?php echo Form::input('empAddress',$employee['address'], array('id'=>'editAddEmp'.sha1($employee['employee_id']),'class'=>'applicant_input','style'=>'width:98%')); ?></td>
 							</tr><tr>
 								<td class='label'>Citizenship:</td>
-								<td class='input'><?php echo Form::input('empEmail',$employee['address'], array('id'=>'editCitizenshipEmp' . sha1($employee['employee_id']),'class'=>'applicant_input','style'=>'width:98%')); ?></td>
+								<td class='input'><?php echo Form::input('empEmail',$employee['citizenship'], array('id'=>'editCitizenshipEmp' . sha1($employee['employee_id']),'class'=>'applicant_input','style'=>'width:98%')); ?></td>
 							</tr><tr>
 								<td class='label'>Religion:</td>
-								<td class='input'><?php echo Form::input('empReligion',$employee['lastname'], array('id'=>'editReligionEmp' . sha1($employee['employee_id']),'class'=>'applicant_input','style'=>'width:98%')); ?></td>
+								<td class='input'><?php echo Form::input('empReligion',$employee['religion'], array('id'=>'editReligionEmp' . sha1($employee['employee_id']),'class'=>'applicant_input','style'=>'width:98%')); ?></td>
 							</tr><tr>
 								<td class='label'>Sex:</td>
 								<td class='input'>
 								<?php foreach($genders AS $gender=>$sex){ ?>
 									<?php if($sex == $employee['sex']){ ?>
-									<?php echo Form::radio('gender', $sex, true) . ":" . $gender;?>
+									<?php echo Form::radio('gender', $sex, true,array("id"=>"empSex" . sha1($employee['employee_id']))) . ":" . $gender;?>
 									<?php } else {?>
-									<?php echo Form::radio('gender', $sex) . ":" . $gender;?>
+									<?php echo Form::radio('gender', $sex,null,array("id"=>"empSex" . sha1($employee['employee_id']))) . ":" . $gender;?>
 									<?php } ?>
 								<?php } ?>
 								</td>
@@ -107,7 +107,7 @@
 									</select>
 								</td>
 							</tr><tr>
-								<td class='label'>Civill Status:</td>
+								<td class='label'>Civil Status:</td>
 								<td class='input'>
 									<?php foreach($marital_statuses AS $marital_stat => $marital_status){ ?>
 									<?php if($employee['relation_stat'] == $marital_stat){ ?>
@@ -121,6 +121,19 @@
 								<td class='label'>Employee Rate:</td>
 								<td class='input'>
 								<?php echo Form::input('employee_rate', $employee['employee_rate'], array("class"=>"applicant_input", "style"=>"width: 98%"));?>
+								</td>
+							</tr><tr>
+								<td class='label'>Working Status:</td>
+								<td class='input'>
+								<select name="working_status" id='empWorkingStatus<?php echo sha1($employee['employee_id']);?>' class='applicant_input' style='width:98%;'>
+								<?php foreach($working_statuses AS $index=>$working_status){ ?>
+								<?php if($index == $employee['w_status']){ ?>
+								<option value="<?php echo $index;?>"><?php echo $working_status;?></option>
+								<?php } else { ?>
+								<option value="<?php echo $index;?>"><?php echo $working_status;?></option>
+								<?php } ?>
+								<?php } ?>
+								</select>
 								</td>
 							</tr><tr>
 							<td colspan='2' id="reponseUpdatedEmp<?php echo md5($employee['employee_id']);?>" style="display:none;"></td>
@@ -140,7 +153,7 @@
 				$("#editEmployee<?php echo sha1($employee['employee_id']);?>").on('click', function(){
 					$("#editEmployeeModal<?php echo sha1($employee['employee_id'].$employee['firstname']);?>").reveal();
 				});
-												$("#saveemployeebtn<?php echo sha1($employee['employee_id']);?>").on('click', function(){
+							$("#saveemployeebtn<?php echo sha1($employee['employee_id']);?>").on('click', function(){
 									$.ajax({
 										url: '<?php echo URL::site('ems/update_employee',null,true);?>',
 										data: {
@@ -148,14 +161,20 @@
 											fname: $("#editFnameEmp<?php echo sha1($employee['employee_id']);?>").val(),
 											mname:$("#editMnameEmp<?php echo sha1($employee['employee_id']);?>").val(),
 											lname:$("#editLnameEmp<?php echo sha1($employee['employee_id']);?>").val(),
-											position:$("#empJobPosition<?php echo md5($employee['employee_id']);?>").val()
+											position:$("#empJobPosition<?php echo md5($employee['employee_id']);?>").val(),
+											address: $("#editAddEmp<?php echo sha1($employee['employee_id']);?>").val(),
+											citizen: $("#editCitizenshipEmp<?php echo sha1($employee['employee_id']);?>").val(),
+											religion: $("#editReligionEmp<?php echo sha1($employee['employee_id']);?>").val(),
+											sex: $("#empSex<?php echo sha1($employee['employee_id']);?>").val(),
+											civil_status: $("#empWorkingStatus<?php echo sha1($employee['employee_id']);?>").val(),
+											working_status: $("#empWorkingStatus<?php echo sha1($employee['employee_id']);?>").val()
 										},
 										type: 'POST',
 										success: function(reponseUpdatedEmployee){
 											var responseUpdatedEmployee = reponseUpdatedEmployee;
 											if(responseUpdatedEmployee == 1){
 												alert("Employee has been successfully updated");
-												self.location = '<?php echo URL::site('ems/admin_dashboard',null,true);?>';
+												self.location = '<?php echo URL::site('ems/hr_dashboard',null,true);?>';
 											} else {
 												alert(responseUpdatedEmployee);
 											}
