@@ -82,7 +82,6 @@
 							data: { ded_no: '<?php echo $sss['ded_no'];?>', deduction: $("input[name='deduction']").val() },
 							success:function(ressponseSaveSSS){
 								alert(ressponseSaveSSS);
-
 								self.location = '<?php echo URL::site('pms/deduction_table', null, true);?>';
 							}
 						});

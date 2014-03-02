@@ -122,7 +122,7 @@ class Webstructure {
 		$links = array();
 		$nav = "<ul class='dropdown' style='z-index:2;text-decoration:none;margin-top:-40px;height:45px;float:right;'>";
 		$nav .= "<li><a href='".URL::base()."index.php/ems/admin_dashboard'>Dashboard</a></li>";
-		$nav .= "<li><a href='".URL::site('ems/add_employee',null,true)."'>Add Employee</a></li>";
+		//$nav .= "<li><a href='".URL::site('ems/add_employee',null,true)."'>Add Employee</a></li>";
 		$nav .= "<li><a href='".URL::base()."index.php/ems/admin_leave_request'>Leaves</a></li>";
 		$nav .= "<li><a href='".URL::base()."index.php/ems/admin_archives'>File Archives</a></li>";
 		$nav .= "<li><a href='".URL::site(null,null,false)."index.php/ems/admin_logout'>Logout</a></li>";

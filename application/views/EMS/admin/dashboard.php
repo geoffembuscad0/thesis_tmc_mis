@@ -91,11 +91,6 @@
 									<?php echo $employee['pos_name'];?>
 								</td>
 							</tr><tr>
-								<td class='label'>Position:</td>
-								<td class='input'>
-									<?php echo $employee['pos_name'];?>
-								</td>
-							</tr><tr>
 								<td class='label'>Employee Type:</td>
 								<td class='input'>
 									<?php echo $employee['type']; ?>
