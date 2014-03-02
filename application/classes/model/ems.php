@@ -2,7 +2,7 @@
 ini_set ("display_errors", true);
 defined ('SYSPATH') or die ('No direct script access.');
 class Model_Ems extends Model_Database {
-	public function __construct(){	
+	public function __construct(){
 	}
 	public function count_leaves($employee){
 		$query = DB::query(DATABASE::SELECT, "SELECT count(*) as absents from ems_leaves WHERE employee_id = '".$employee."'")->execute()->as_array();
@@ -41,17 +41,23 @@ class Model_Ems extends Model_Database {
 		}
 	}
 	public function get_employees($filter = array(), $type = 1){
+
 		$sql = null;
 		if(isset($filter['search_query'])){
-			$sql = "SELECT 
-			(SELECT COUNT(*) FROM ems_leaves WHERE employee_id = ems_employee.`employee_id`) AS absents,
+			$sql = "SELECT (SELECT COUNT(*) FROM ems_leaves WHERE employee_id = ems_employee.`employee_id`) AS absents,
 					ems_employee.*,ems_positions.*,ems_departments.*,ems_employee_type.*,pms_position_rate.* FROM ems_employee JOIN ems_employee_type ON ems_employee_type.`employee_type` = ems_employee.`employee_type` INNER JOIN ems_positions ON ems_positions.`position_no` = ems_employee.`position_no` INNER JOIN pms_position_rate ON pms_position_rate.`position_no` = ems_employee.`position_no` INNER JOIN ems_departments ON ems_departments.`dept_no` = ems_positions.`dept_no` WHERE
 					LOWER(ems_employee.firstname) LIKE '%".$filter['search_query']."%' OR
 					LOWER(ems_employee.middlename) LIKE '%".$filter['search_query']."%' OR
 					LOWER(ems_employee.lastname) LIKE '%".$filter['search_query']."%' 
 					";
 		}else{
-			$sql = "SELECT (SELECT COUNT(*) FROM ems_leaves WHERE employee_id = ems_employee.`employee_id`) AS absents,ems_employee.*,ems_positions.*,ems_departments.*,ems_employee_type.*,pms_position_rate.* FROM ems_employee JOIN ems_employee_type ON ems_employee_type.`employee_type` = ems_employee.`employee_type` INNER JOIN ems_positions ON ems_positions.`position_no` = ems_employee.`position_no` INNER JOIN pms_position_rate ON pms_position_rate.`position_no` = ems_employee.`position_no` INNER JOIN ems_departments ON ems_departments.`dept_no` = ems_positions.`dept_no` ";
+			$sql = "SELECT (SELECT COUNT(*) FROM ems_leaves WHERE employee_id = ems_employee.`employee_id`) AS absents,ems_employee.*,ems_positions.*,ems_departments.*,ems_employee_type.*,pms_position_rate.* 
+					FROM ems_employee 
+					JOIN ems_employee_type ON ems_employee_type.`employee_type` = ems_employee.`employee_type` 
+					INNER JOIN ems_ems_employee_locations on ems_employee_locations.employee_id = ems_employee.employee_id 
+					INNER JOIN ems_positions ON ems_positions.`position_no` = ems_employee.`position_no` 
+					INNER JOIN pms_position_rate ON pms_position_rate.`position_no` = ems_employee.`position_no` 
+					INNER JOIN ems_departments ON ems_departments.`dept_no` = ems_positions.`dept_no` ";
 		}
 		$filter_strings = array();
 
@@ -97,18 +103,6 @@ class Model_Ems extends Model_Database {
 			$filter_strings[] = " ems_employee.lastname DESC ";
 		}
 		
-		if($filter['position'] == 1){
-			$filter_strings[] = " ems_positions.pos_name ASC ";
-		} else if($filter['position']==2){
-			$filter_strings[] = " ems_positions.pos_name DESC ";
-		}
-		
-		if($filter['department'] == 1){
-			$filter_strings[] = " ems_departments.dept_name ASC ";
-		} else if($filter['department']==2){
-			$filter_strings[] = " ems_departments.dept_name DESC ";
-		}
-		
 		if($filter['search_query']==null){
 			// WHERE Clause
 			$where_clause = array();
@@ -117,7 +111,13 @@ class Model_Ems extends Model_Database {
 			} else if($filter['type']==2){
 				$where_clause[] = " ems_employee.employee_type = 2 ";
 			}
+			if($filter['position']!=null){
+				$where_clause[] = " ems_positions.position_no = '".$filter['position']."' ";
+			}
 			
+			if($filter['department']!=null){
+				$where_clause[] = " ems_departments.dept_no = '".$filter['department']."'";
+			}
 			if($filter['resign_employees'] == 0){
 				$where_clause[] = " ems_employee.status = 1 ";
 			} else {
@@ -161,7 +161,7 @@ class Model_Ems extends Model_Database {
 
 		$employees = array();
 		$counter = 0;
-
+// 		die($sql);
 		foreach(DB::query(DATABASE::SELECT, $sql)->execute()->as_array() AS $employee_data){
 			$employees[$counter]['employee_id'] = $employee_data['employee_id'];
 			$employees[$counter]['firstname'] = $employee_data['firstname'];
@@ -189,6 +189,7 @@ class Model_Ems extends Model_Database {
 			$employees[$counter]['employee_rate'] = $employee_data['rate'];
 			$employees[$counter]['place_of_birth'] = $employee_data['place_of_birth'];
 			$employees[$counter]['religion'] = $employee_data['religion'];
+			$employees[$counter]['sex']=$employee_data['sex'];
 			$employees[$counter]['citizenship'] = $employee_data['citizenship'];
 			$employees[$counter]['emg_name'] = $employee_data['emergency_name'];
 			$employees[$counter]['emg_contact'] = $employee_data['emergency_contact'];
@@ -278,8 +279,11 @@ class Model_Ems extends Model_Database {
 	public function insert_employee($data = array()){
 		$sql = "INSERT INTO ems_employee values('".$data['employee_code']."',
 		'".$data['firstname']."','".$data['middlename']."','".$data['lastname']."',
-		'".$data['job_position']."','".$data['employee_type']."',now(),'".$data['birthdate']."',now(),'1','".$data['civil_status']."', '".$data['pob']."', '".$data['religion']."','".$data['citizenship']."', '".$data['emg_name']."', '".$data['emg_contact']."', '".$data['emg_sec_contact']."')";
-
+		'".$data['job_position']."','".$data['employee_type']."',now(),
+		'".$data['birthdate']."',now(),'1','".$data['civil_status']."', 
+		'".$data['pob']."', '".$data['religion']."','".$data['citizenship']."',
+		'".$data['emg_name']."', '".$data['emg_contact']."', 
+		'".$data['emg_sec_contact']."','".$data['gender']."')";		
 		DB::query(DATABASE::INSERT, $sql)->execute();
 	}
 	public function get_position_department(){

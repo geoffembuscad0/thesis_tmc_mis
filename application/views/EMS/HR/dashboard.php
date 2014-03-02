@@ -23,8 +23,14 @@
 		</thead>
 		<tbody>
 		<tr id="filterEmployeeList"><td><?php echo Form::select('name_query',$sort_queries['name'],$filter_data['name']); ?></td>
-		<td><?php echo Form::select('position_query',$sort_queries['position'],$filter_data['position']); ?></td>
-		<td><?php echo Form::select('department_query',$sort_queries['department'],$filter_data['department']); ?></td>
+		<td class='spanPositions'></td>
+		<td>
+		<select name='department_query'>
+		<?php foreach($sort_queries['department'] AS $depts){ ?>
+			<option value="<?php echo $depts['dept_no'];?>"><?php echo $depts['dept_name'];?></option>
+		<?php } ?>
+		</select>
+		</td>
 		<td>
 		<select name='type_query'>
 		<?php foreach($sort_queries['type'] AS $type_key => $type){?>
@@ -68,6 +74,26 @@
 								<td class='label'>Lastname:</td>
 								<td class='input'><?php echo Form::input('empLname',$employee['lastname'], array('id'=>'editLnameEmp' . sha1($employee['employee_id']),'class'=>'applicant_input','style'=>'width:98%')); ?></td>
 							</tr><tr>
+								<td class='label'>Address:</td>
+								<td class='input'><?php echo Form::input('empAddress',$employee['address'], array('id'=>'editCitizenshipEmp' . sha1($employee['employee_id']),'class'=>'applicant_input','style'=>'width:98%')); ?></td>
+							</tr><tr>
+								<td class='label'>Citizenship:</td>
+								<td class='input'><?php echo Form::input('empEmail',$employee['address'], array('id'=>'editCitizenshipEmp' . sha1($employee['employee_id']),'class'=>'applicant_input','style'=>'width:98%')); ?></td>
+							</tr><tr>
+								<td class='label'>Religion:</td>
+								<td class='input'><?php echo Form::input('empReligion',$employee['lastname'], array('id'=>'editReligionEmp' . sha1($employee['employee_id']),'class'=>'applicant_input','style'=>'width:98%')); ?></td>
+							</tr><tr>
+								<td class='label'>Sex:</td>
+								<td class='input'>
+								<?php foreach($genders AS $gender=>$sex){ ?>
+									<?php if($sex == $employee['sex']){ ?>
+									<?php echo Form::radio('gender', $sex, true) . ":" . $gender;?>
+									<?php } else {?>
+									<?php echo Form::radio('gender', $sex) . ":" . $gender;?>
+									<?php } ?>
+								<?php } ?>
+								</td>
+							</tr><tr>
 								<td class='label'>Position:</td>
 								<td class='input'>
 									<select id='empJobPosition<?php echo md5($employee['employee_id']);?>' class='applicant_input' style='width:98%;'>
@@ -81,7 +107,7 @@
 									</select>
 								</td>
 							</tr><tr>
-								<td class='label'>Marital Status:</td>
+								<td class='label'>Civill Status:</td>
 								<td class='input'>
 									<?php foreach($marital_statuses AS $marital_stat => $marital_status){ ?>
 									<?php if($employee['relation_stat'] == $marital_stat){ ?>
@@ -159,8 +185,8 @@ $(document).ready(function(){
 			url += 'name=' + $("select[name='name_query']").val();
 		}
 
-		if($("select[name='position_query']").val()){
-			url += '&position='+$("select[name='position_query']").val();
+		if($("select[name='position']").val()){
+			url += '&position='+$("select[name='position']").val();
 		}
 
 		if($("select[name='department_query']").val()){
@@ -208,6 +234,19 @@ $('table#employeeListahan').each(function() {
     $pager.insertBefore($table).find('span.page-number:first').addClass('active');
 });
 // need cop
+//changes department
+$("select[name='department_query']").change(function(){
+	var dept  = $(this).val();
+	//alert(dept);
+	$.ajax({
+		url: '<?php echo URL::site('ems/get_position_by_dept', null, true);?>',
+		type: 'POST',
+		data: { department: dept },
+		success: function(htmlResponseSelect){
+			$(".spanPositions").html(htmlResponseSelect);
+		}
+	});
+});
 });
 </script>
 </body>

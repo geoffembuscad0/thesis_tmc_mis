@@ -32,8 +32,14 @@
 			</thead>
 			<tbody>
 	<tr id="filterEmployeeList"><td><?php echo Form::select('name_query',$sort_queries['name'],$filter_data['name']); ?></td>
-		<td><?php echo Form::select('position_query',$sort_queries['position'],$filter_data['position']); ?></td>
-		<td><?php echo Form::select('department_query',$sort_queries['department'],$filter_data['department']); ?></td>
+		<td class='spanPositions'></td>
+		<td>
+		<select name='department_query'>
+		<?php foreach($sort_queries['department'] AS $depts){ ?>
+			<option value="<?php echo $depts['dept_no'];?>"><?php echo $depts['dept_name'];?></option>
+		<?php } ?>
+		</select>
+		</td>
 		<td>
 		<select name='type_query'>
 		<?php foreach($sort_queries['type'] AS $type_key => $type){?>
@@ -54,7 +60,7 @@
 						<td><?php echo date('d/m/Y g:i A',strtotime($employee['date_modified'])); ?></td>
 						<td>
 							<button id="viewEmployeeBtn<?php echo sha1($employee['employee_id']);?>" class="view">View Employee</button>
-							<button id="editEmployeeBtn<?php echo sha1($employee['employee_id']);?>" class="approve">Edit Employee</button>
+							<!-- <button id="editEmployeeBtn<?php // echo sha1($employee['employee_id']);?>" class="approve">Edit Employee</button> -->
 							<button id="deleteEmp<?php echo $employee['employee_id'];?>" class="deny">Resign Employee</button>
 							
 							<div class="reveal-modal" id="viewEmployeeModal<?php echo sha1($employee['employee_id']);?>">
@@ -232,7 +238,7 @@
 					</tr>
 				<?php } ?>
 			<?php } else { ?>
-				<tr><td colspan='5'>-No employees-</td></tr>
+				<tr><td colspan='6'>-No employees-</td></tr>
 			<?php }?>
 			</tbody>
 		</table>
@@ -255,8 +261,8 @@ $(document).ready(function(){
 			url += 'name=' + $("select[name='name_query']").val();
 		}
 
-		if($("select[name='position_query']").val()){
-			url += '&position='+$("select[name='position_query']").val();
+		if($("select[name='position']").val()){
+			url += '&position='+$("select[name='position']").val();
 		}
 
 		if($("select[name='department_query']").val()){
@@ -309,6 +315,20 @@ $(document).ready(function(){
 	    if(e.keyCode == 13){
 		    self.location = '<?php echo URL::site('ems/admin_dashboard?search_query=',null,true); ?>' + $("input[name='search_query']").val();
 	    }
+	});
+
+	// changes department
+	$("select[name='department_query']").change(function(){
+		var dept  = $(this).val();
+		//alert(dept);
+		$.ajax({
+			url: '<?php echo URL::site('ems/get_position_by_dept', null, true);?>',
+			type: 'POST',
+			data: { department: dept },
+			success: function(htmlResponseSelect){
+				$(".spanPositions").html(htmlResponseSelect);
+			}
+		});
 	});
 });
 </script>

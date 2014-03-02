@@ -7,6 +7,9 @@
     	<h1><?php echo $account_name[0]['firstname']; ?> <?php echo (empty($account_name[0]['middlename'])) ? "" : ucfirst(substr($account_name[0]['middlename'],0,1)) . "."; ?> <?php echo $account_name[0]['lastname'];?> | General Manager</h1>
     </div>
 </div>
+<div style="width: 100%; background:#0099cc;color: #fff; font-size:32px;text-align:center;">
+	Personal Information
+</div>
 <div class="pure-g" style="text-align: left;">
 	<div class="pure-u-1-3" style="width: 100%">
 		<table class="InquiryDocumentsSales">
@@ -20,7 +23,7 @@
 			</thead>
 			<tbody>
 				<tr>
-					<td><?php echo Form::input('barcode_value', null, array("placeholder"=>"Barcode","style"=>"width: 98%"));?></td>
+					<td><?php echo Form::input('barcode_val', null, array("placeholder"=>"Barcode","style"=>"width: 98%"));?></td>
 					<td><?php echo Form::input('firstname', null, array("placeholder"=>"Firstname","style"=>"width: 98%"));?></td>
 					<td><?php echo Form::input('middlename', null, array("placeholder"=>"Middlename","style"=>"width: 98%"));?></td>
 					<td><?php echo Form::input('lastname', null, array("placeholder"=>"Lastname","style"=>"width:98%"));?></td>
@@ -59,6 +62,7 @@
 					</td>
 					<td>
 					<select name="department" style="width: 98%;">
+					<?php //array_sort($departments); ?>
 					<?php foreach($departments AS $department){ ?>
 						<option value="<?php echo $department[
 						'dept_no'];?>"><?php echo $department['dept_name'];?></option>
@@ -86,6 +90,7 @@
 				<tr>
 					<th>Place Of Birth</th>
 					<th>Religion</th>
+					<th>Gender:</th>
 					<th>Citizenship</th>
 				</tr>
 			</thead>
@@ -93,6 +98,7 @@
 				<tr>
 					<td><?php echo Form::input('placeOfBirth', null, array("style"=>"width: 98%", "placeholder"=>"Place of Birth"));?></td>
 					<td><?php echo Form::input('religion', null, array("style"=>"width: 98%", "placeholder"=>"Religion"));?></td>
+					<td>Male:<?php echo Form::radio('gender', 'm');?>Female:<?php echo Form::radio('gender','f');?></td>
 					<td><?php echo Form::input('citizenship', null, array("style"=>"width: 98%", "placeholder"=>"Citizenship"));?></td>
 				</tr>
 			</tbody>
@@ -110,9 +116,25 @@
 			</thead>
 			<tbody>
 				<tr>
-					<td><?php echo Form::input('emg_name', null, array('style'=>'width: 98%;', 'placeholder'=>'Name'));?></td>
-					<td><?php echo Form::input('emg_contact',null, array('style'=>'width: 98%;', 'placeholder'=>'Contact No.'));?></td>
-					<td><?php echo Form::input('emg_sec_contact', null, array('style'=>'width:98%;','placeholder'=>'Secondary contact No.')); ?></td>
+					<td><?php echo Form::input('emg_name_one', null, array('style'=>'width: 98%;', 'placeholder'=>'Name'));?></td>
+					<td><?php echo Form::input('emg_contact_one',null, array('style'=>'width: 98%;', 'placeholder'=>'Contact No.','maxlength'=>'11'));?></td>
+					<td><?php echo Form::input('emg_sec_contact_one', null, array('style'=>'width:98%;','placeholder'=>'Secondary contact No.','maxlength'=>'11')); ?></td>
+				</tr>
+			</tbody>
+		</table>
+		<table class="InquiryDocumentsSales">
+			<thead>
+				<tr>
+					<th>Name</th>
+					<th>Contact #</th>
+					<th>Secondary Contact #</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td><?php echo Form::input('emg_name_two', null, array('style'=>'width: 98%;', 'placeholder'=>'Name'));?></td>
+					<td><?php echo Form::input('emg_contact_two',null, array('style'=>'width: 98%;', 'placeholder'=>'Contact No.','maxlength'=>'11'));?></td>
+					<td><?php echo Form::input('emg_sec_contact_two', null, array('style'=>'width:98%;','placeholder'=>'Secondary contact No.','maxlength'=>'11')); ?></td>
 				</tr>
 				<tr class='msgAddEmployee'>
 				</tr>
@@ -143,6 +165,7 @@ $(document).ready(function(){
 		});
 	});
 	$("#addEmployeeBtn").on('click', function(){
+
 		$.ajax({
 			url: '<?php echo URL::site('ems/adding_employee',null, true);?>',
 			type: 'POST',
@@ -157,13 +180,18 @@ $(document).ready(function(){
 				job_position: $("select[name='position']").val(),
 				employee_type: $("input[name='employee_type']").val(),
 				civil_status: $("input[name='civil_status']").val(),
+				gender:$("input[name='gender']").val(),
 				place_of_birth: $("input[name='placeOfBirth']").val(),
 				religion: $("input[name='religion']").val(),
 				citizenship: $("input[name='citizenship']").val(),
 				// emergency information
-				emg_name: $("input[name='emg_name']").val(),
-				emg_contact: $("input[name='emg_contact']").val(),
-				emg_sec_contact: $("input[name='emg_sec_contact']").val()
+				emg_name: $("input[name='emg_name_one']").val(),
+				emg_contact: $("input[name='emg_contact_one']").val(),
+				emg_sec_contact: $("input[name='emg_sec_contact_one']").val(),
+				emg_name_two: $("input[name='emg_name_two']").val(),
+				emg_contact_two: $("input[name='emg_contact_two']").val(),
+				emg_sec_contact_two: $("input[name='emg_sec_contact_two']").val()
+				 
 			},
 			success: function(responseInsertEmployee){
 				$(".msgAddEmployee").html(responseInsertEmployee);

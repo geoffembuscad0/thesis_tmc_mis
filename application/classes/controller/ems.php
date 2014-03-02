@@ -135,7 +135,31 @@ class Controller_Ems extends Controller {
 		$presentation_tier->leave_statuses = array(0=>"",1=>"Approved",2=>"Rejected");
 		$this->response->body($presentation_tier);
 	}
-	
+	public function action_hr_add(){
+		$this->obj['response']->headers(array(
+				'Cache-Control' => 'no-store, no-cache, must-revalidate, max-age=0',
+				'Pragma'		=> 'no-cache',
+				'Expires'		=>'Sat, 26 Jul 1997 05:00:00 GMT'));
+		// validates session
+		if(Session::instance()->get('hr_id') == null && Session::instance()->get('hr_sess') == null){
+			echo "<script>self.location='" . URL::site ( 'login', null, true ) . "';</script>";
+		}
+		// Calls presentation page file
+		$presentation_tier = View::factory ( "ems/HR/add_employee" );
+		
+		// Calls webstructure
+		$presentation_tier->head = $this->obj ['webstructure']->head ( "Add Employee - HR Head");
+		$presentation_tier->page_header = $this->obj ['webstructure']->page_header ( $this->obj ['webstructure']->ems_hr_navigation () );
+		$presentation_tier->account_name = $this->obj['acc_logic']->get_account_name(Session::instance()->get(md5('ems').'admin_sess'), "ems");
+		$presentation_tier->employee_types = array(1=>"Fulltime", 2=>"Part-Time");
+		$presentation_tier->civil_status = array(1=>"Single",2=>"Married");
+		
+		// Core Model
+		$presentation_tier->job_positions = $this->obj['ems_logic']->get_position();
+		$presentation_tier->departments = $this->obj['ems_logic']->get_departments();
+		
+		$this->response->body($presentation_tier);
+	}
 	public function action_hr_dashboard(){ //Current work
 		$this->obj['response']->headers(array(
 				'Cache-Control' => 'no-store, no-cache, must-revalidate, max-age=0',
@@ -160,10 +184,11 @@ class Controller_Ems extends Controller {
 		$presentation_tier->job_positions = $this->obj['ems_logic']->get_position();
 		$presentation_tier->departments = $this->obj['ems_logic']->get_departments();
 		$presentation_tier->marital_statuses = array(1=>"Single", 2=>"Married");
+		$presentation_tier->genders = array('male'=>'m','female'=>'f');
 		$presentation_tier->sort_queries = array(
 				"name" => array("","Firstname - ASC","Firstname - DESC","Lastname - ASC","Lastname - DESC"),
 				"position"=>array("","ASC","DESC"),
-				"department"=>array("","ASC","DESC"),
+				"department"=>$this->obj['ems_logic']->get_departments(),
 				"type"=>array("",2=>"Part-Time",1=>"Fulltime"),
 				"date"=>array("","ASC","DESC"));
 		
@@ -185,8 +210,8 @@ class Controller_Ems extends Controller {
 
 		$presentation_tier->filter_data = $filter_datas;
 		$presentation_tier->employees = $this->obj['ems_logic']->get_employees($filter_datas);
-		
 		// Renders Template
+// 		echo "<pre>";print_r($presentation_tier->employees);die();
 		$this->response->body($presentation_tier);
 	}
 	public function action_set_applicant_schedule(){
@@ -440,7 +465,7 @@ class Controller_Ems extends Controller {
 		$presentation_tier->sort_queries = array(
 				"name" => array("","Firstname - ASC","Firstname - DESC","Lastname - ASC","Lastname - DESC"),
 				"position"=>array("","ASC","DESC"),
-				"department"=>array("","ASC","DESC"),
+				"department"=>$this->obj['ems_logic']->get_departments(),
 				"type"=>array("",1=>"Fulltime",2=>"Part-Time"),
 				"date"=>array("","ASC","DESC"),
 				"date_modified"=>array("","ASC","DESC")
@@ -460,18 +485,14 @@ class Controller_Ems extends Controller {
 				"search_query"=>$this->request->query('search_query'),
 				"resign_employees"=>0
 		);
-		
+// 		echo "<pre>";print_r($filter_datas);die();
 		$presentation_tier->filter_data = $filter_datas;
 		$presentation_tier->employees = $this->obj['ems_logic']->get_employees($filter_datas);
-		// echo "<pre>";print_r($presentation_tier->employees);die();
 		$presentation_tier->job_positions = $this->obj['ems_logic']->get_position_department();
 		$presentation_tier->marital_statuses = array(1=>"Single", 2=>"Married");
-// 		echo "<pre>";print_r($presentation_tier->employees);die();
-		// Renders Template
 		$this->response->body($presentation_tier);
 	}
 	public function action_add_employee(){
-// 		echo "Add Emplo";
 		$this->obj['response']->headers(array(
 				'Cache-Control' => 'no-store, no-cache, must-revalidate, max-age=0',
 				'Pragma'		=> 'no-cache',
@@ -560,15 +581,19 @@ class Controller_Ems extends Controller {
 			'civil_status'=>$this->request->post('civil_status'),
 			'pob'=>$this->request->post('place_of_birth'),
 			'religion'=>$this->request->post('religion'),
+			'gender'=>$this->request->post('gender'),
 			'citizenship'=>$this->request->post('citizenship'),
-			'emg_name'=>$this->request->post('emg_name'),
-			'emg_contact'=>$this->request->post('emg_contact'),
-			'emg_sec_contact'=>$this->request->post('emg_sec_contact')
+			'emg_name'=>$this->request->post('emg_name_one'),
+			'emg_contact'=>$this->request->post('emg_contact_one'),
+			'emg_sec_contact'=>$this->request->post('emg_sec_contact_one'),
+			'emg_name_two'=>$this->request->post('emg_name_two'),
+			'emg_contact_two'=>$this->request->post('emg_contact_two'),
+			'emg_sec_contact_two'=>$this->request->post('emg_sec_contact_two')
 		);
 		
 		
 		$error = array();
-		
+
 		if($data['employee_code'] == null){
 			$error[] = "Employee ID not valid.";
 		}
@@ -605,11 +630,18 @@ class Controller_Ems extends Controller {
 			$error[] = "Religion is not valid, should be all alphabetical.";
 		}
 		
+		if($data['gender'] == null){
+			$error[] = "Gender is required.";
+		}
 		if(!Valid::alpha(str_replace(" ", "", $data['citizenship']))){
 			$error[] = "Citizenship is not valid, should be all alphabetical.";
 		}
 		
 		if($data['emg_name'] == null || $data['emg_contact'] == null || $data['emg_sec_contact'] == null){
+			$error[] = "Informations in the emergency should not be empty.";
+		}
+		
+		if($data['emg_name_two'] == null || $data['emg_contact_two'] == null || $data['emg_sec_contact_two'] == null){
 			$error[] = "Informations in the emergency should not be empty.";
 		}
 		

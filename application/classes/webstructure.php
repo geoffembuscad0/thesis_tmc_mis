@@ -97,6 +97,7 @@ class Webstructure {
 	public function ems_hr_navigation(){
 		$nav = "<ul class='dropdown' style='z-index:2;text-decoration:none;margin-top:-40px;height: 45px;float:right;'>";
 		$nav .= "<li><a href='".URL::site("ems/hr_dashboard",null, true)."'>Dashboard</a></li>";
+		$nav .= "<li><a href='".URL::site("ems/hr_add",null, true)."'>Add Employee</a></li>";
 		$nav .= "<li><a href='".URL::site("ems/leaves_history", null, true)."'>Leaves History</a></li>";
 		$nav .= "<li><a href='".URL::site("ems/hr_logout",null,true)."'>Logout</a></li>";
 		$nav .= "</ul>";
