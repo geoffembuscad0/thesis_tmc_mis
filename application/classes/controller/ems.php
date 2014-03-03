@@ -687,13 +687,14 @@ class Controller_Ems extends Controller {
 			$error[] = "Citizenship is not valid, should be all alphabetical.";
 		}
 		
-		if($data['emg_name'] == null || $data['emg_contact'] == null || $data['emg_sec_contact'] == null){
+		if($data['emg_name'] == null || $data['emg_contact'] == null || $data['emg_sec_contact'] == null ||
+		$data['emg_name_two'] == null || $data['emg_contact_two'] == null || $data['emg_sec_contact_two'] == null){
 			$error[] = "Informations in the emergency should not be empty.";
 		}
-		
-		if($data['emg_name_two'] == null || $data['emg_contact_two'] == null || $data['emg_sec_contact_two'] == null){
-			$error[] = "Informations in the emergency should not be empty.";
-		}
+		echo "<pre>";print_r($data);die();
+// 		if($data['emg_name_two'] == null || $data['emg_contact_two'] == null || $data['emg_sec_contact_two'] == null){
+// 			$error[] = "Informations in the emergency should not be empty.";
+// 		}
 		
 		if(count($error)>0){
 			$error_msg = implode(" ",$error);

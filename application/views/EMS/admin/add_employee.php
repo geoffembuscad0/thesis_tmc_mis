@@ -185,9 +185,9 @@ $(document).ready(function(){
 				religion: $("input[name='religion']").val(),
 				citizenship: $("input[name='citizenship']").val(),
 				// emergency information
-				emg_name: $("input[name='emg_name_one']").val(),
-				emg_contact: $("input[name='emg_contact_one']").val(),
-				emg_sec_contact: $("input[name='emg_sec_contact_one']").val(),
+				emg_name_one: $("input[name='emg_name_one']").val(),
+				emg_contact_one: $("input[name='emg_contact_one']").val(),
+				emg_sec_contact_one: $("input[name='emg_sec_contact_one']").val(),
 				emg_name_two: $("input[name='emg_name_two']").val(),
 				emg_contact_two: $("input[name='emg_contact_two']").val(),
 				emg_sec_contact_two: $("input[name='emg_sec_contact_two']").val()
