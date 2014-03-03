@@ -339,9 +339,9 @@ class Model_Ems extends Model_Database {
 	}
 	public function update_employee($datas = array()){
 		$position_pieces = explode(" - ", $datas['position']);
-		$sql = "UPDATE ems_employee SET date_modified = NOW(), firstname = 'Paolo', middlename = 'Cruz', 
-lastname = 'Amandilino', date_modified = now(), address = '".$datas['address']."',
-sex = 'm', STATUS = '1', relation_stat = '".$datas['civil_status']."',employee_id='".$datas['employee_id']."',
+		$sql = "UPDATE ems_employee SET date_modified = NOW(), firstname = '".$datas['firstname']."', middlename = '".$datas['middlename']."', 
+lastname = '".$datas['lastname']."', date_modified = now(), address = '".$datas['address']."',
+sex = '".$datas['sex']."', STATUS = '".$datas['working_status']."', relation_stat = '".$datas['civil_status']."',employee_id='".$datas['employee_id']."',
 employee_rate  = '".$datas['employee_rate']."', position_no = (SELECT ems_positions.`position_no`
 FROM ems_positions WHERE ems_positions.`pos_name` LIKE '%".$position_pieces[1]."%')
 WHERE employee_id = '".$datas['previous_id']."'";

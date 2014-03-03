@@ -298,7 +298,7 @@ class Controller_Pms extends Controller {
 		}
 		
 		$total_hours_worked = $this->get_employee_total_hours($employee_id);
-// 		die($total_hours_worked);
+
 		$OT_hours = $this->get_employee_total_OT_hours($employee_id);
 		$OT_rate = $employee_rate * 0.20; // 20% of employee rate per OT hour
 		$OT_pay = $OT_rate * $OT_hours;
