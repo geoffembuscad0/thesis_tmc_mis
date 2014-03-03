@@ -42,23 +42,23 @@
 					$(document).ready(function(){
 						$("#approveLeave<?php echo $leave['leave_no'];?>").on('click',function(){
 							$.ajax({
-								url:'<?php echo URL::site('ems/approve_leave',null,false);?>',
+								url:'<?php echo URL::site('ems/approve_leave',null,true);?>',
 								type: 'POST',
 								data: { leave_no: '<?php echo $leave['leave_no'];?>'},
 								success: function(){
 									alert('Leave has been approved.');
-									self.location = '<?php echo URL::site('ems/admin_leave_request', null, false);?>';
+									self.location = '<?php echo URL::site('ems/admin_leave_request', null, true);?>';
 								}
 							});
 						});
 						$("#rejectLeave<?php echo $leave['leave_no'];?>").on('click', function(){
 							$.ajax({
-								url: '<?php echo URL::site('ems/deny_leave', null,false);?>',
+								url: '<?php echo URL::site('ems/deny_leave', null,true);?>',
 								type:'POST',
 								data: { leave_no: '<?php echo $leave['leave_no'];?>'},
 								success: function(){
 									alert('Leave has been rejected.');
-									self.location = '<?php echo URL::site('ems/admin_leave_request', null,false);?>';
+									self.location = '<?php echo URL::site('ems/admin_leave_request', null,true);?>';
 								}
 							});
 						});

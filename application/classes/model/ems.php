@@ -147,11 +147,9 @@ class Model_Ems extends Model_Database {
 					$sql .= "";
 				}
 			}
-			if(count($where_clause) > 0 ){
-				$sql .= " WHERE ";
-				if(count($where_clause) > 0 ){
-					$sql .= implode(" AND ", $where_clause);
-				}
+			
+			if(count($where_clause) > 0){
+				$sql .= " WHERE " . implode(" AND ", $where_clause);
 			} else if(count($where_clause) == 0) {
 				if($filter['name'] !=null || $filter['position'] !=null || $filter['department'] !=null || $filter['date'] != null){
 					$sql .= " ORDER BY " . implode(",", $filter_strings);
@@ -180,6 +178,100 @@ class Model_Ems extends Model_Database {
 			$employees[$counter]['type'] = $employee_data['type'];
             $employees[$counter]['w_status'] = $employee_data['status'];
             $employees[$counter]['relation_stat'] = $employee_data['relation_stat'];
+			$employees[$counter]['working_hours'] = $employee_data['working_hours'];
+			if(count($this->get_emp_contact_information($employee_data['employee_id'])) > 0){
+				$employees[$counter]['contact_infos'] = $this->get_emp_contact_information($employee_data['employee_id']);
+			} else {
+				$employees[$counter]['contact_infos'] = array(array('mobile'=>null,'telephone'=>null, 'email'=>null, 'employee_id'=>null));
+			}
+			if(count($this->get_emp_location($employee_data['employee_id'])) > 0){
+				$employees[$counter]['location_infos'] = $this->get_emp_location($employee_data['employee_id']);
+			} else {
+				$employees[$counter]['location_infos'] = array(array('employee_id'=>$employee_data['employee_id'],'address'=>null));
+			}
+			$employees[$counter]['location_infos'] = $this->get_emp_location($employee_data['employee_id']);
+			$employees[$counter]['employee_rate'] = $employee_data['rate'];
+			$employees[$counter]['place_of_birth'] = $employee_data['place_of_birth'];
+			$employees[$counter]['religion'] = $employee_data['religion'];
+			$employees[$counter]['sex']=$employee_data['sex'];
+			$employees[$counter]['citizenship'] = $employee_data['citizenship'];
+			$employees[$counter]['emg_name'] = $employee_data['emergency_name'];
+			$employees[$counter]['emg_contact'] = $employee_data['emergency_contact'];
+			$employees[$counter]['emg_sec_contact'] = $employee_data['emergency_sec_contact'];
+			$counter++;
+		}
+		return $employees;
+	}
+	public function get_employees_archives($datas = array()){
+		$sql = "SELECT (SELECT COUNT(*) FROM ems_leaves WHERE employee_id = ems_employee.`employee_id`) AS absents,
+ems_employee.*,ems_positions.*,ems_departments.*,ems_employee_type.*,pms_position_rate.* 
+FROM ems_employee 
+JOIN ems_employee_type ON ems_employee_type.`employee_type` = ems_employee.`employee_type` 
+INNER JOIN ems_positions ON ems_positions.`position_no` = ems_employee.`position_no` 
+INNER JOIN pms_position_rate ON pms_position_rate.`position_no` = ems_employee.`position_no` 
+INNER JOIN ems_departments ON ems_departments.`dept_no` = ems_positions.`dept_no`";
+		$where = array();
+		if($datas['firstname'] != null){
+			$where[] = " lcase(ems_employee.firstname) = lcase('".$datas['firstname']."') ";
+		}
+		
+		if($datas['middlename'] != null){
+			$where[] = " lcase(ems_employee.middlename) = lcase('".$datas['middlename']."') ";
+		}
+		
+		if($datas['lastname'] !=null){
+			$where[] = " lcase(ems_employee.lastname) = lcase('".$datas['lastname']."') ";
+		}
+		
+		if($datas['working_status'] != null){
+			$where[] = " ems_employee.status = '".$datas['working_status']."' ";
+		}
+		
+		if($datas['date_start_work_from']!=null){
+			$where[] = " ems_employee.date_added <= '".$datas['date_start_work_from']."' ";
+		}
+		
+		if($datas['department_name'] != null){
+			$where[] = " ems_departments.dept_no = '".$datas['department_name']."'";
+		}
+		
+		if($datas['date_start_work_to']!=null){
+			$where[] = " ems_employee.date_added >= '".$datas['date_start_work_to']."' ";
+		}
+		
+		if($datas['department'] != null){
+			$where[] = " ems_employee.dept_no = '".$datas['department']."' ";
+		}
+		
+		if($datas['marital_status'] != null){
+			$where[] = " ems_employee.relation_stat = '".$datas['marital_status']."' ";
+		}
+		
+		if(count($where) > 0){
+			$sql .= " WHERe " . implode(" AND ",$where);
+		}
+// 		die($sql);
+		$employees = array();
+		$counter = 0;
+		// 		die($sql);
+		foreach(DB::query(DATABASE::SELECT, $sql)->execute()->as_array() AS $employee_data){
+			$employees[$counter]['employee_id'] = $employee_data['employee_id'];
+			$employees[$counter]['firstname'] = $employee_data['firstname'];
+			$employees[$counter]['absents'] = $employee_data['absents'];
+			$employees[$counter]['middlename'] = $employee_data['middlename'];
+			$employees[$counter]['lastname'] = $employee_data['lastname'];
+			$employees[$counter]['position_no'] = $employee_data['position_no'];
+			$employees[$counter]['employee_type'] = $employee_data['employee_type'];
+			$employees[$counter]['date_added'] = $employee_data['date_added'];
+			$employees[$counter]['address'] = $employee_data['address'];
+			$employees[$counter]['birthdate'] = $employee_data['birthdate'];
+			$employees[$counter]['pos_name'] = $employee_data['pos_name'];
+			$employees[$counter]['dept_no'] = $employee_data['dept_no'];
+			$employees[$counter]['dept_name'] = $employee_data['dept_name'];
+			$employees[$counter]['date_modified'] = $employee_data['date_modified'];
+			$employees[$counter]['type'] = $employee_data['type'];
+			$employees[$counter]['w_status'] = $employee_data['status'];
+			$employees[$counter]['relation_stat'] = $employee_data['relation_stat'];
 			$employees[$counter]['working_hours'] = $employee_data['working_hours'];
 			if(count($this->get_emp_contact_information($employee_data['employee_id'])) > 0){
 				$employees[$counter]['contact_infos'] = $this->get_emp_contact_information($employee_data['employee_id']);

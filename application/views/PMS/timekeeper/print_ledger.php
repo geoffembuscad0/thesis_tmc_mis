@@ -31,7 +31,7 @@ table tr th,td{border: 1px solid #000;padding: 6px 6px 6px 6px;text-align:left;}
 		<td><?php echo $data['deduction']['sss'];?></td>
 		<td><?php echo $data['deduction']['pagibig'];?></td>
 		<td><?php echo $data['deduction']['philhealth'];?></td>
-		<td><?php echo $data['net_pay'];?></td>
+		<td><?php echo ($data['net_pay']<0)?0:$data['net_pay'];?></td>
 		<?php $net_total += $data['net_pay'];?>
 	</tr>
 	<?php } ?>

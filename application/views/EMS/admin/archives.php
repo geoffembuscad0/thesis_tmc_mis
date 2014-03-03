@@ -71,7 +71,7 @@
         <table id='employeeListahan' class="InquiryDocumentsSales">
             <thead>
                 <tr>
-                    <th>Employee No.</th>
+                    <th>Employee ID</th>
                     <th>Employee Name</th>
                     <th>Department</th>
                     <th>Position</th>

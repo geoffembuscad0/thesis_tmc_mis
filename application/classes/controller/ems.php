@@ -439,33 +439,32 @@ class Controller_Ems extends Controller {
 		$presentation_tier->head = $this->obj ['webstructure']->head ( "HR Dashboard");
 		$presentation_tier->page_header = $this->obj ['webstructure']->page_header ( $this->obj ['webstructure']->ems_admin_navigation () );
 		
-                // filter datas
-                $data_filter = array(
-                	"working_status"=>$this->request->query('working_status'),
-                    "name"=>($this->request->query('name')!=null) ? $this->request->query('name') : null,
-                    "firstname"=>($this->request->query('firstname')!=null)?$this->request->query('firstname') : null,
-                    "middlename"=>($this->request->query('middlename')!=null)?$this->request->query('middlename'):null,
-                    "lastname"=>($this->request->query('lastname')!=null)?$this->request->query('lastname'):null,
-                    "position"=>($this->request->query('position') != null)?$this->request->query('position') : null,
-                    "department"=>($this->request->query('department') != null)? $this->request->query('departname') : null,
-                    "department_name"=>($this->request->query('dept')!=null)?$this->request->query('dept'):null,
-                    "date_start_work_from"=>($this->request->query('date_start_work_from')!=null)?$this->request->query('date_start_work_from'):null,
-                    "date_start_work_to"=>($this->request->query('date_start_work_from')!=null)?$this->request->query('date_start_work_from'):null,
-                    "marital_status"=>($this->request->query('marital_stat')!=null)?$this->request->query('marital_stat'):null,
-                    "type"=>($this->request->query('type')!=null) ? $this->request->query('type') : null,
-                    "date"=>($this->request->query('date')!=null) ? $this->request->query('date') : null,
-                    "date_modified"=>($this->request->query('date_modified')!=null) ? $this->request->query('date_modified') : null,
-                    "search_query"=>($this->request->query('search_query')!=null) ? $this->request->query('search_query') : null,
-                    "resign_employees"=>true
+        // filter datas
+        $data_filter = array(
+        		"working_status"=>$this->request->query('working_status'),
+                "name"=>($this->request->query('name')!=null) ? $this->request->query('name') : null,
+                "firstname"=>($this->request->query('firstname')!=null)?$this->request->query('firstname') : null,
+                "middlename"=>($this->request->query('middlename')!=null)?$this->request->query('middlename'):null,
+                "lastname"=>($this->request->query('lastname')!=null)?$this->request->query('lastname'):null,
+                "position"=>($this->request->query('position') != null)?$this->request->query('position') : null,
+                "department"=>($this->request->query('department') != null)? $this->request->query('departname') : null,
+                "department_name"=>($this->request->query('dept')!=null)?$this->request->query('dept'):null,
+                "date_start_work_from"=>($this->request->query('date_start_work_from')!=null)?$this->request->query('date_start_work_from'):null,
+                "date_start_work_to"=>($this->request->query('date_start_work_from')!=null)?$this->request->query('date_start_work_from'):null,
+                "marital_status"=>($this->request->query('marital_stat')!=null)?$this->request->query('marital_stat'):null,
+                "type"=>($this->request->query('type')!=null) ? $this->request->query('type') : null,
+                "date"=>($this->request->query('date')!=null) ? $this->request->query('date') : null,
+                "date_modified"=>($this->request->query('date_modified')!=null) ? $this->request->query('date_modified') : null,
+                "search_query"=>($this->request->query('search_query')!=null) ? $this->request->query('search_query') : null,
+                "resign_employees"=>true
 		);
-// echo "<pre>";print_r($data_filter);die();
-        // echo "<pre>";print_r($this->obj['ems_logic']->get_employees($data_filter,2));die();
+
         // Core Logics
 		$presentation_tier->account_name = $this->obj['acc_logic']->get_account_name(Session::instance()->get(md5('ems').'admin_sess'), "ems");
 		$presentation_tier->employee_status = array(1=>"Active", 0=>"Resigned");
 		$presentation_tier->marital_status = array(""=>"",1=>"Single",2=>"Married");
         $presentation_tier->departments = $this->obj['ems_logic']->get_departments();
-        $presentation_tier->employees = $this->obj['ems_logic']->get_employees($data_filter,2);
+        $presentation_tier->employees = $this->obj['ems_logic']->get_employees_archives($data_filter,0);
                 
 		// Renders Template
 		$this->response->body($presentation_tier);
@@ -691,10 +690,7 @@ class Controller_Ems extends Controller {
 		$data['emg_name_two'] == null || $data['emg_contact_two'] == null || $data['emg_sec_contact_two'] == null){
 			$error[] = "Informations in the emergency should not be empty.";
 		}
-// 		echo "<pre>";print_r($data);die();
-// 		if($data['emg_name_two'] == null || $data['emg_contact_two'] == null || $data['emg_sec_contact_two'] == null){
-// 			$error[] = "Informations in the emergency should not be empty.";
-// 		}
+
 		
 		if(count($error)>0){
 			$error_msg = implode(" ",$error);
