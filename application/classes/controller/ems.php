@@ -691,7 +691,7 @@ class Controller_Ems extends Controller {
 		$data['emg_name_two'] == null || $data['emg_contact_two'] == null || $data['emg_sec_contact_two'] == null){
 			$error[] = "Informations in the emergency should not be empty.";
 		}
-		echo "<pre>";print_r($data);die();
+// 		echo "<pre>";print_r($data);die();
 // 		if($data['emg_name_two'] == null || $data['emg_contact_two'] == null || $data['emg_sec_contact_two'] == null){
 // 			$error[] = "Informations in the emergency should not be empty.";
 // 		}

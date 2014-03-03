@@ -4,7 +4,7 @@
     	<h1>Add Employee</h1>
     </div>
     <div class="pure-u-2-3" style="background:#6F4E37;text-align:right;color:white;width:50%;">
-    	<h1><?php echo $account_name[0]['firstname']; ?> <?php echo (empty($account_name[0]['middlename'])) ? "" : ucfirst(substr($account_name[0]['middlename'],0,1)) . "."; ?> <?php echo $account_name[0]['lastname'];?> | General Manager</h1>
+    	<h1><?php //echo $account_name[0]['firstname']; ?> <?php //echo (empty($account_name[0]['middlename'])) ? "" : ucfirst(substr($account_name[0]['middlename'],0,1)) . "."; ?> <?php //echo $account_name[0]['lastname'];?> | HR Manager</h1>
     </div>
 </div>
 <div style="width: 100%; background:#0099cc;color: #fff; font-size:32px;text-align:center;">

@@ -23,7 +23,7 @@
 			</thead>
 			<tbody>
 				<tr>
-					<td><?php echo Form::input('barcode_val', null, array("placeholder"=>"Barcode","style"=>"width: 98%"));?></td>
+					<td><?php echo Form::input('barcode_val', null, array("placeholder"=>"Barcode","style"=>"width: 98%","maxlength"=>8));?></td>
 					<td><?php echo Form::input('firstname', null, array("placeholder"=>"Firstname","style"=>"width: 98%"));?></td>
 					<td><?php echo Form::input('middlename', null, array("placeholder"=>"Middlename","style"=>"width: 98%"));?></td>
 					<td><?php echo Form::input('lastname', null, array("placeholder"=>"Lastname","style"=>"width:98%"));?></td>
@@ -214,4 +214,3 @@ $(document).ready(function(){
 	});
 });
 </script>
-
