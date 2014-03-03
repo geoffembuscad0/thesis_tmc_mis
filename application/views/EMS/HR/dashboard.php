@@ -177,6 +177,10 @@
 				$("#editEmployee<?php echo sha1($employee['employee_id']);?>").on('click', function(){
 					$("#editEmployeeModal<?php echo sha1($employee['employee_id'].$employee['firstname']);?>").reveal();
 				});
+
+				$("#leaveEmployee<?php echo sha1($employee['employee_id']);?>").on('click',function(){
+					self.location = '<?php echo URL::site('ems/employee_leaves?employee=' . $employee['employee_id'],null,true);?>';
+				});
 							$("#saveemployeebtn<?php echo sha1($employee['employee_id']);?>").on('click', function(){
 								// alert($("#employeerate<?php echo sha1($employee['employee_id']);?>").val());
 								

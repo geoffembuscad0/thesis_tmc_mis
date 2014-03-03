@@ -350,7 +350,7 @@ WHERE employee_id = '".$datas['previous_id']."'";
 		$update_contact = "UPDATE ems_employee_contact SET employee_id='".$datas['employee_id']."',mobile = '".$datas['mobile']."',
 				telephone = '".$datas['telephone']."',
 				email = '".$datas['email']."' WHERE employee_id = '".$datas['previous_id']."' ";
-//		die($update_contact);
+
 		DB::query(DATABASE::UPDATE, $update_contact)->execute();
 
 		$update_location = "UPDATE ems_employee_locations SET employee_id='".$datas['employee_id']."',address = '".$datas['other_address']."' WHERE employee_id = '".$datas['previous_id']."'";
