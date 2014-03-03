@@ -186,6 +186,11 @@ class Model_Ems extends Model_Database {
 			} else {
 				$employees[$counter]['contact_infos'] = array(array('mobile'=>null,'telephone'=>null, 'email'=>null, 'employee_id'=>null));
 			}
+			if(count($this->get_emp_location($employee_data['employee_id'])) > 0){
+				$employees[$counter]['location_infos'] = $this->get_emp_location($employee_data['employee_id']);
+			} else {
+				$employees[$counter]['location_infos'] = array(array('employee_id'=>$employee_data['employee_id'],'address'=>null));
+			}
 			$employees[$counter]['location_infos'] = $this->get_emp_location($employee_data['employee_id']);
 			$employees[$counter]['employee_rate'] = $employee_data['rate'];
 			$employees[$counter]['place_of_birth'] = $employee_data['place_of_birth'];
@@ -212,9 +217,16 @@ class Model_Ems extends Model_Database {
 		return $data;
 	}
 	public function get_emp_location($employee_id){
-	$data = array();
-
-		return DB::query(DATABASE::SELECT, "SELECT * FROM ems_employee_locations WHERE employee_id = '".$employee_id."'")->execute()->as_array();
+		$data = array();
+		$counter = 0;
+		foreach(DB::query(DATABASE::SELECT, "SELECT * FROM ems_employee_locations WHERE employee_id = '".$employee_id."'")->execute()->as_array() AS $emp_location){
+			$data[$counter] = array(
+				'employee_id'=>$emp_location['employee_id'],
+				'address'=>$emp_location['address']
+			);
+		}
+		return $data;
+		//return DB::query(DATABASE::SELECT, "SELECT * FROM ems_employee_locations WHERE employee_id = '".$employee_id."'")->execute()->as_array();
 	}
 	public function get_employee($employee_id){
 		$sql = "SELECT ems_employee.*,ems_positions.*,ems_departments.*,ems_employee_type.* FROM ems_employee JOIN ems_employee_type ON ems_employee_type.`employee_type` = ems_employee.`employee_type` INNER JOIN ems_positions ON ems_positions.`position_no` = ems_employee.`position_no` INNER JOIN ems_departments ON ems_departments.`dept_no` = ems_positions.`dept_no` WHERE ems_employee.`employee_id` = '".$employee_id."'";
@@ -278,15 +290,20 @@ class Model_Ems extends Model_Database {
 		}
 	}
 	public function insert_employee($data = array()){
-		$sql = "INSERT INTO ems_employee values('".$data['employee_code']."',
+		$sql_insert = "INSERT INTO ems_employee values('".$data['employee_code']."',
 		'".$data['firstname']."','".$data['middlename']."','".$data['lastname']."',
 		'".$data['job_position']."','".$data['employee_type']."',now(),
 		'".$data['birthdate']."',now(),'1','".$data['civil_status']."', 
 		'".$data['pob']."', '".$data['religion']."','".$data['citizenship']."',
 		'".$data['emg_name']."', '".$data['emg_contact']."', 
-		'".$data['emg_sec_contact']."','".$data['gender']."','".$data['address']."')";
+		'".$data['emg_sec_contact']."','".$data['gender']."','".$data['address']."',0)";
+
+		DB::query(DATABASE::INSERT, $sql_insert)->execute();
 		
-		DB::query(DATABASE::INSERT, $sql)->execute();
+		$sql_add_rate = "UPDATE ems_employee e SET e.employee_rate = (SELECT rate FROM pms_position_rate pr 
+		WHERE pr.`position_no` = (SELECT e.`position_no`)) WHERE e.`employee_id` = '".$data['employee_code']."';";
+		
+		DB::query(DATABASE::UPDATE, $sql_add_rate)->execute();
 	}
 	public function get_position_department(){
 		return DB::query(DATABASE::SELECT, "SELECT p.*,dept.* FROM ems_positions p INNER JOIN ems_departments dept ON p.`dept_no`=dept.`dept_no`")->execute()->as_array();
@@ -322,19 +339,22 @@ class Model_Ems extends Model_Database {
 	}
 	public function update_employee($datas = array()){
 		$position_pieces = explode(" - ", $datas['position']);
-		$sql = "UPDATE ems_employee 
-				SET date_modified = now(), 
-				firstname = '".$datas['firstname']."', 
-				middlename = '".$datas['middlename']."',
-				lastname = '".$datas['lastname']."',
-				address = '".$datas['address']."',
-				sex= '".$datas['sex']."',
-				status = '".$datas['working_status']."',
-				relation_stat = '".$datas['civil_status']."',
-				position_no = (SELECT ems_positions.`position_no`
-				FROM ems_positions WHERE ems_positions.`pos_name` LIKE '%".$position_pieces[1]."%')
-				WHERE employee_id = '".$datas['employee_id']."'";
+		$sql = "UPDATE ems_employee SET date_modified = NOW(), firstname = 'Paolo', middlename = 'Cruz', 
+lastname = 'Amandilino', date_modified = now(), address = '".$datas['address']."',
+sex = 'm', STATUS = '1', relation_stat = '".$datas['civil_status']."',employee_id='".$datas['employee_id']."',
+employee_rate  = '".$datas['employee_rate']."', position_no = (SELECT ems_positions.`position_no`
+FROM ems_positions WHERE ems_positions.`pos_name` LIKE '%".$position_pieces[1]."%')
+WHERE employee_id = '".$datas['previous_id']."'";
 		DB::query(DATABASE::UPDATE, $sql)->execute();
+		
+		$update_contact = "UPDATE ems_employee_contact SET employee_id='".$datas['employee_id']."',mobile = '".$datas['mobile']."',
+				telephone = '".$datas['telephone']."',
+				email = '".$datas['email']."' WHERE employee_id = '".$datas['previous_id']."' ";
+//		die($update_contact);
+		DB::query(DATABASE::UPDATE, $update_contact)->execute();
+
+		$update_location = "UPDATE ems_employee_locations SET employee_id='".$datas['employee_id']."',address = '".$datas['other_address']."' WHERE employee_id = '".$datas['previous_id']."'";
+		DB::query(DATABASE::UPDATE, $update_location)->execute();
 		return 1;
 	}
 	

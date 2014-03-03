@@ -23,7 +23,7 @@
 					<th>Position</th>
 					<th>Department</th>
 					<th>Type</th>
-					<th>Date Changed</th>
+					<th>Date Hired</th>
 					<th><div id="searchbabe">
 					<input type="text" name="search_query" placeholder="Search here..."/>
 					</div>

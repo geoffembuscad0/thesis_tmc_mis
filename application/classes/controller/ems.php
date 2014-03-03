@@ -211,7 +211,6 @@ class Controller_Ems extends Controller {
 
 		$presentation_tier->filter_data = $filter_datas;
 		$presentation_tier->employees = $this->obj['ems_logic']->get_employees($filter_datas);
-		// Renders Template
 // 		echo "<pre>";print_r($presentation_tier->employees);die();
 		$this->response->body($presentation_tier);
 	}
@@ -230,9 +229,13 @@ class Controller_Ems extends Controller {
 	public function action_update_employee(){
 		$datas = array();
 		$msg = null;
-		
-		if(Valid::alpha_numeric($this->request->post('emp_id'))){
-			$datas['employee_id'] = $this->request->post('emp_id');
+		$datas['previous_id'] = $this->request->post('previous_id');
+		if($this->request->post('emp_id')!=null){
+			if(Valid::numeric($this->request->post('emp_id'))){
+				$datas['employee_id'] = $this->request->post('emp_id');
+			} else {
+				$msg .= "Employee ID should be numeric.";
+			}
 		} else {
 			$msg .= "Invalid Employee number.";
 		}
@@ -274,6 +277,32 @@ class Controller_Ems extends Controller {
 			$msg.="Civil Status entry is not valid. ";
 		}
 		$datas['working_status'] = $this->request->post('working_status');
+	
+		if($this->request->post('employee_rate') !=null ){
+			$datas['employee_rate'] = $this->request->post('employee_rate');
+		} else {
+			$datas['employee_rate'] = "Employee rate is not valid.";
+		}//embuscado added function
+		
+		if(!Valid::numeric($this->request->post('mobile'))){
+			$datas['mobile'] = "Mobile number should be numeric.";
+		} else {
+			$datas['mobile'] = $this->request->post('mobile');
+		}
+		
+		if(!Valid::numeric(str_replace("-", "", $this->request->post('telephone')))){
+			$datas['telephone'] = "Telephone number should be numeric.";
+		} else {
+			$datas['telephone'] = $this->request->post('telephone');
+		}
+		
+		if(Valid::email($this->request->post('email'))){
+			$datas['email'] = $this->request->post('email');
+		} else {
+			$datas['email'] = "Invalid Email.";
+		}
+		
+		$datas['other_address'] = $this->request->post('other_address');
 		
 		if($msg == null){
 			echo $this->obj['ems_logic']->update_employee($datas);
@@ -615,6 +644,8 @@ class Controller_Ems extends Controller {
 
 		if($data['employee_code'] == null){
 			$error[] = "Employee ID not valid.";
+		} else if(!Valid::numeric($data['employee_code'])){
+			$error[] = "Employee ID should be numeric.";
 		}
 		
 		if(!Valid::alpha(str_replace(" ", "", $data['firstname']))){

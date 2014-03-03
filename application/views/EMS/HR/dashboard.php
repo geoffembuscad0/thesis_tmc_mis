@@ -17,7 +17,7 @@
 				<th>Position</th>
 				<th>Department</th>
 				<th>Type</th>
-				<th>Date Added</th>
+				<th>Date Hired</th>
 				<th></th>
 			</tr>
 		</thead>
@@ -54,10 +54,10 @@
 				<td>
 					<button id="editEmployee<?php echo sha1($employee['employee_id']);?>" class="approve">Edit</button>
 					<button id="leaveEmployee<?php echo sha1($employee['employee_id']);?>" class="approve">Leave</button>
-			<!-- START - Edit Employee Modal -->
-			<div id="editEmployeeModal<?php echo sha1($employee['employee_id'].$employee['firstname']);?>" class="reveal-modal" style="color:#333333;font-size:14px;background-color:#fff;">
-				<p class="close-reveal-modal" style="cursor:pointer;">close[x]</p>
-				<div style="width: 98%;height: 360px;overflow:auto;">
+					<!-- START - Edit Employee Modal -->
+					<div id="editEmployeeModal<?php echo sha1($employee['employee_id'].$employee['firstname']);?>" class="reveal-modal" style="color:#333333;font-size:14px;background-color:#fff;">
+					<p class="close-reveal-modal" style="cursor:pointer;">close[x]</p>
+					<div style="width: 98%;height: 360px;overflow:auto;">
 							<?php echo Form::hidden('employeeID', $employee['employee_id']);?>
 							<table id="careerApplicantForm">
 							<thead>
@@ -66,7 +66,7 @@
 							<tbody>
 							<tr>
 								<td class='label'>Employee ID:</td>
-								<td class='input'><?php echo $employee['employee_id'];?></td>
+								<td class='input'><?php echo Form::input('employee_id',$employee['employee_id'],array('id'=>'employeeID' . sha1($employee['employee_id']),'class'=>'applicant_input','maxlength'=>8,'style'=>'width:98%'));?></td>
 							</tr>
 							<tr>
 								<td class='label'>Firstname:</td>
@@ -78,7 +78,7 @@
 								<td class='label'>Lastname:</td>
 								<td class='input'><?php echo Form::input('empLname',$employee['lastname'], array('id'=>'editLnameEmp' . sha1($employee['employee_id']),'class'=>'applicant_input','style'=>'width:98%')); ?></td>
 							</tr><tr>
-								<td class='label'>Address:</td>
+								<td class='label'>Address(current):</td>
 								<td class='input'><?php echo Form::input('empAddress',$employee['address'], array('id'=>'editAddEmp'.sha1($employee['employee_id']),'class'=>'applicant_input','style'=>'width:98%')); ?></td>
 							</tr><tr>
 								<td class='label'>Citizenship:</td>
@@ -124,7 +124,7 @@
 							</tr><tr>
 								<td class='label'>Employee Rate:</td>
 								<td class='input'>
-								<?php echo Form::input('employee_rate', $employee['employee_rate'], array("class"=>"applicant_input", "style"=>"width: 98%"));?>
+								<?php echo Form::input('employee_rate', $employee['employee_rate'], array("class"=>"applicant_input","id"=>"employeerate" . sha1($employee['employee_id']), "style"=>"width: 98%"));?>
 								</td>
 							</tr><tr>
 								<td class='label'>Working Status:</td>
@@ -140,6 +140,26 @@
 								</select>
 								</td>
 							</tr><tr>
+								<td class='label' colspan='2'>Contact Information</td>
+							</tr><?php foreach($employee['contact_infos'] AS $conEmp){ ?>
+								<?php foreach($conEmp AS $contact_label => $contact_emp){ ?>
+								<tr><td class='label'><?php echo strtoupper($contact_label);?></td>
+								<td class='input'><?php echo Form::input($contact_label, $contact_emp,array('class'=>'applicant_input','id'=>$contact_label . sha1($employee['employee_id']),'style'=>'width:98%'));?></td>
+								</tr>
+								<?php } ?>
+								<?php } ?>
+							<tr>
+								<td class='label' colspan='2'>Location Information</td>
+							</tr><?php foreach($employee['location_infos'] AS $LocEmp){ ?>
+								<?php foreach($LocEmp AS $location_label => $location_emp){ ?>
+								<?php if($location_label != "employee_id"){ ?>
+								<tr><td class='label'><?php echo strtoupper($location_label);?></td>
+								<td class='input'><?php echo Form::input($location_label, $location_emp,array('class'=>'applicant_input','id'=>$location_label . sha1($employee['employee_id']),'style'=>'width:98%'));?></td>
+								</tr>
+								<?php }?>
+								<?php } ?>
+								<?php } ?>
+							<tr>
 							<td colspan='2' id="reponseUpdatedEmp<?php echo md5($employee['employee_id']);?>" style="display:none;"></td>
 							</tr><tr>
 								<td colspan='2'><button id="saveemployeebtn<?php echo sha1($employee['employee_id']);?>" class="approve" style="width: 30%;padding-top: 6px;padding-bottom: 6px;">Update Employee</button></td>
@@ -158,10 +178,13 @@
 					$("#editEmployeeModal<?php echo sha1($employee['employee_id'].$employee['firstname']);?>").reveal();
 				});
 							$("#saveemployeebtn<?php echo sha1($employee['employee_id']);?>").on('click', function(){
+								// alert($("#employeerate<?php echo sha1($employee['employee_id']);?>").val());
+								
 									$.ajax({
 										url: '<?php echo URL::site('ems/update_employee',null,true);?>',
 										data: {
-											emp_id:'<?php echo $employee['employee_id'];?>',
+											previous_id:'<?php echo $employee['employee_id'];?>',
+											emp_id:$("#employeeID<?php echo sha1($employee['employee_id']);?>").val(),
 											fname: $("#editFnameEmp<?php echo sha1($employee['employee_id']);?>").val(),
 											mname:$("#editMnameEmp<?php echo sha1($employee['employee_id']);?>").val(),
 											lname:$("#editLnameEmp<?php echo sha1($employee['employee_id']);?>").val(),
@@ -171,7 +194,12 @@
 											religion: $("#editReligionEmp<?php echo sha1($employee['employee_id']);?>").val(),
 											sex: $("#empSex<?php echo sha1($employee['employee_id']);?>").val(),
 											civil_status: $("#empWorkingStatus<?php echo sha1($employee['employee_id']);?>").val(),
-											working_status: $("#empWorkingStatus<?php echo sha1($employee['employee_id']);?>").val()
+											working_status: $("#empWorkingStatus<?php echo sha1($employee['employee_id']);?>").val(),
+											employee_rate: $("#employeerate<?php echo sha1($employee['employee_id']);?>").val(),
+									mobile: $("#mobile<?php echo sha1($employee['employee_id']);?>").val(),
+											telephone: $("#telephone<?php echo sha1($employee['employee_id']);?>").val(),
+											email: $("#email<?php echo sha1($employee['employee_id']);?>").val(),
+											other_address: $("#address<?php echo sha1($employee['employee_id']);?>").val()
 										},
 										type: 'POST',
 										success: function(reponseUpdatedEmployee){
@@ -236,7 +264,7 @@ $(document).ready(function(){
 
 $('table#employeeListahan').each(function() {
     var currentPage = 0;
-    var numPerPage = 100;
+    var numPerPage = 80 * 5;
     var $table = $(this);
     $table.bind('repaginate', function() {
         $table.find('tbody tr').hide().slice(currentPage * numPerPage, (currentPage + 1) * numPerPage).show();
