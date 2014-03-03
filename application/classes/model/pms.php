@@ -113,7 +113,7 @@ class Model_Pms extends Model {
 			WHERE ems_employee.`employee_id` = '".$employee_id."'")->execute()->as_array();
 		$rate = 0;
 		foreach($query AS $q){
-			$rate = $q['rate'];
+			$rate = $q['employee_rate'];
 		}
 		return $rate;
 	}
